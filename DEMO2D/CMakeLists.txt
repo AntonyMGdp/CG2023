@@ -10,7 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use vcpkg toolchain file
 set(VCPKG_TARGET_TRIPLET "x64-windows")
-set(CMAKE_TOOLCHAIN_FILE "C:/Users/Tello/vcpkg/scripts/buildsystems/vcpkg.cmake")
+get_filename_component(PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" DIRECTORY)
+get_filename_component(PARENT_DIR "${PARENT_DIR}" DIRECTORY)
+get_filename_component(PARENT_DIR "${PARENT_DIR}" DIRECTORY)
+set(VCPKG_ROOT "${PARENT_DIR}")
+set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
 # Find required libraries
 find_package(OpenGL REQUIRED)
@@ -20,7 +24,7 @@ find_path(
         GLM_INCLUDE_DIR
         NAMES glm/glm.hpp
         PATHS
-        C:/Users/Tello/vcpkg/installed/x64-windows/include
+        ${VCPKG_ROOT}/vcpkg/installed/x64-windows/include
         DOC "The directory where glm/glm.hpp resides")
 find_package_handle_standard_args(GLM DEFAULT_MSG GLM_INCLUDE_DIR)
 set(GLM_INCLUDE_DIRS ${GLM_INCLUDE_DIR})

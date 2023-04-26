@@ -1,4 +1,44 @@
-cmake_minimum_required(VERSION 3.25)
-project(L01)
+cmake_minimum_required(VERSION 3.5)
+include(FindPackageHandleStandardArgs)
 
-set(CMAKE_CXX_STANDARD 14)
+# Set project name and version
+project(L01 VERSION 1.0)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Use vcpkg toolchain file
+set(VCPKG_TARGET_TRIPLET "x64-windows")
+get_filename_component(PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" DIRECTORY)
+get_filename_component(PARENT_DIR "${PARENT_DIR}" DIRECTORY)
+get_filename_component(PARENT_DIR "${PARENT_DIR}" DIRECTORY)
+set(VCPKG_ROOT "${PARENT_DIR}")
+set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
+# Find required libraries
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(GLUT REQUIRED)
+find_path(
+        GLM_INCLUDE_DIR
+        NAMES glm/glm.hpp
+        PATHS
+        ${VCPKG_ROOT}/vcpkg/installed/x64-windows/include
+        DOC "The directory where glm/glm.hpp resides")
+find_package_handle_standard_args(GLM DEFAULT_MSG GLM_INCLUDE_DIR)
+set(GLM_INCLUDE_DIRS ${GLM_INCLUDE_DIR})
+
+
+# Add executable
+add_executable(L01
+        L01/L01.cpp
+        L01/ShaderMaker.h
+        L01/ShaderMaker.cpp)
+
+
+# Set include directories
+include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+
+# Link required libraries
+target_link_libraries(L01 ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${GLUT_LIBRARIES})
