@@ -726,9 +726,6 @@ void drawScene(void)
 
 	int index;
 
-	
-	
-
 	index = 0; //sfondo
 	Scena[index].Model = mat4(1.0);
 	Scena[index].Model = translate(Scena[index].Model, vec3(width / 2, height / 2, 0));
@@ -761,12 +758,14 @@ void drawScene(void)
 	drawfan(index);
 
 	index = 3; //stelo
+
+    vec3 scalaStelo = vec3(scalafiore, scalafiore*1.1, 0);
 	Scena[index].Model = mat4(1.0);
-	Scena[index].Model = translate(Scena[index].Model, vec3(0, 70, 0));
+	Scena[index].Model = translate(Scena[index].Model, vec3(0, 30, 0));
 	Scena[index].Model = translate(Scena[index].Model, globaltranslate);
-	Scena[index].Model = scale(Scena[index].Model, scalaFiore);
-	Scena[index].Model = scale(Scena[index].Model, vec3(90, 130, 1.0));
-	Scena[index].Model = scale(Scena[index].Model, vec3(2,2, 1.0)); //
+	Scena[index].Model = scale(Scena[index].Model, scalaStelo);
+	Scena[index].Model = scale(Scena[index].Model, vec3(90, 125, 1.0));
+	Scena[index].Model = scale(Scena[index].Model, vec3(1.4,1.25, 1.0)); //
 	Scena[index].Model = translate(Scena[index].Model, vec3(-.3f, 1, 0));
 
 	drawtriangles(index);
