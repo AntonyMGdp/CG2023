@@ -91,6 +91,8 @@ public:
 	radiosity_patch_index = i;
   }
 
+    vector<Vec3f> UniformPointsOnFace(int numPoints) const;
+
 protected:
 
   // helper functions

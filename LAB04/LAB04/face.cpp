@@ -1,3 +1,4 @@
+#include <vector>
 #include "face.h"
 #include "matrix.h"
 #include "utils.h"
@@ -61,9 +62,41 @@ Face::RandomPoint () const
   return answer;
 }
 
+vector<Vec3f>
+Face::UniformPointsOnFace (int numPoints) const
+{
+    Vec3f a = (*this)[0]->get ();
+    Vec3f b = (*this)[1]->get ();
+    Vec3f c = (*this)[2]->get ();
+    Vec3f d = (*this)[3]->get ();
+
+    vector<Vec3f> answer = {};
+    int numPointsPerTriangle = numPoints / 2;
+    auto generatePointsOnTriangle = [](const Vec3f& a, const Vec3f& b, const Vec3f& c, int numPoints) {
+        vector<Vec3f> points;
+        for (int i = 0; i < numPoints; ++i) {
+            for (int j = 0; j < numPoints - i; ++j) {
+                float u = (float)(i) / (float)(numPoints);
+                float v = (float)(j) / (float)(numPoints);
+                float w = 1.0f - u - v;
+                Vec3f point = a * u + b * v + c * w;
+                points.push_back(point);
+            }
+        }
+        return points;
+    };
+
+    vector<Vec3f> pointsOnTriangle1 = generatePointsOnTriangle(a, b, d, numPointsPerTriangle);
+    vector<Vec3f> pointsOnTriangle2 = generatePointsOnTriangle(d, b, c, numPointsPerTriangle);
+
+    answer.insert(answer.end(), pointsOnTriangle1.begin(), pointsOnTriangle1.end());
+    answer.insert(answer.end(), pointsOnTriangle2.begin(), pointsOnTriangle2.end());
+
+    return answer;
+}
+
 // =========================================================================
 // the intersection routines
-
 bool
 Face::intersect (const Ray & r, Hit & h, bool intersect_backfacing) const
 {
